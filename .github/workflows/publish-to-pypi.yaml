@@ -1,0 +1,32 @@
+name: Publish to PyPI
+
+on:
+  push:
+    branch:
+      - master
+
+jobs:
+  build:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Setup Python
+        uses: actions/setup-python@master
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
+
+      - name: Build Wheel
+        run: |
+          pip install wheel
+          rm -rf dist build *.egg-info
+          python setup.py sdist bdist_wheel
+
+      - name: Publish Package
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.pypitoken }}
