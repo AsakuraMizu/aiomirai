@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='aiomirai',
-    version='0.0.1',
+    version='0.0.2',
     description='A framework for Tencent QQ headless client \'Mirai\'.',
     author='water_lift',
     author_email='0xWATERx0@gmail.com',

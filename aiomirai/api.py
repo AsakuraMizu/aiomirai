@@ -1,5 +1,5 @@
 """
-此模块提供了 Mirai API 的接口类。
+此模块提供了 Mirai API HTTP 的接口类。
 """
 
 import abc
@@ -8,7 +8,6 @@ from typing import Callable, Any, Union, Awaitable, Dict
 
 
 class Api:
-
     @abc.abstractmethod
     def call_action(self, action: str, **params) -> Union[Awaitable[Any], Any]:
         pass
@@ -18,9 +17,18 @@ class Api:
         """获取一个可调用对象，用于调用对应 API。"""
         return functools.partial(self.call_action, item)
 
-class SessionApi(Api):
 
+class SessionApi(Api):
     @abc.abstractmethod
     def auth(self) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         pass
 
+
+class AsyncApi(Api):
+    @abc.abstractmethod
+    async def call_action(self, action: str, **params) -> Any:
+        pass
+
+
+class AsyncSessionApi(SessionApi, AsyncApi):
+    pass
