@@ -9,9 +9,6 @@ class Api:
     继承此类的具体实现类应实现 `call_action` 方法。
     """
 
-    api_root: str
-    auth_key: str
-
     def call_action(
             self,
             action: str,
@@ -35,12 +32,9 @@ class Api:
 
 class SessionApi(Api):
     """
-    API 接口类，继承自 `Api`，提供会话接口。
+    API 接口类，继承自 `Api`，提供会话相关接口。
     继承此类的具体实现类应实现 `call_action` 和 `auth` 方法。
     """
-
-    qq: int
-    session_key: str
 
     def auth(
             self
@@ -70,7 +64,7 @@ class SessionApi(Api):
     def send_friend_message(
             self, *,
             target: int,
-            message_chain: MessageChain,
+            message_chain: MessageChain_T,
             quote: Optional[int] = None
         ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
@@ -86,7 +80,7 @@ class SessionApi(Api):
     def send_temp_message(
             self, *,
             target: int,
-            message_chain: MessageChain,
+            message_chain: MessageChain_T,
             quote: Optional[int] = None
         ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
@@ -102,7 +96,7 @@ class SessionApi(Api):
     def send_group_message(
             self, *,
             target: int,
-            message_chain: MessageChain,
+            message_chain: MessageChain_T,
             quote: Optional[int] = None
         ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
@@ -163,7 +157,7 @@ class SessionApi(Api):
     def fetch_message(
             self, *,
             count: int
-        ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]]:
+        ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
         获取接收到的最老消息和最老各类事件（会从 MiraiApiHttp 消息记录中删除）
 
@@ -175,7 +169,7 @@ class SessionApi(Api):
     def fetch_latest_message(
             self, *,
             count: int
-        ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]]:
+        ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
         获取接收到的最新消息和最新各类事件（会从 MiraiApiHttp 消息记录中删除）
 
@@ -187,7 +181,7 @@ class SessionApi(Api):
     def peek_message(
             self, *,
             count: int
-        ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]]:
+        ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
         获取接收到的最老消息和最老各类事件（不会从 MiraiApiHttp 消息记录中删除）
 
@@ -199,7 +193,7 @@ class SessionApi(Api):
     def peek_latest_message(
             self, *,
             count: int
-        ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]]:
+        ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
         获取接收到的最新消息和最新各类事件（不会从 MiraiApiHttp 消息记录中删除）
 
@@ -221,7 +215,7 @@ class SessionApi(Api):
         ...
 
     def get_count_message(
-            self, *,
+            self
         ) -> Union[Awaitable[int], int]:
         """
         查看缓存的消息总数
@@ -229,7 +223,7 @@ class SessionApi(Api):
         ...
 
     def get_friend_list(
-            self, *
+            self
         ) -> Union[Awaitable[List[Dict[str, Any]]], List[Dict[str, Any]]]:
         """
         获取好友列表
@@ -237,7 +231,7 @@ class SessionApi(Api):
         ...
 
     def get_group_list(
-            self, *
+            self
         ) -> Union[Awaitable[List[Dict[str, Any]]], List[Dict[str, Any]]]:
         """
         获取群列表
@@ -383,7 +377,7 @@ class SessionApi(Api):
         ...
 
     def get_config(
-            self, *
+            self
         ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
         获取当前Session的配置信息，注意该配置是Session范围有效
@@ -403,3 +397,27 @@ class SessionApi(Api):
             enable_websocket: 是否开启Websocket
         """
         ...
+
+class AsyncApi(Api):
+    """
+    异步 API 接口类。
+    继承此类的具体实现类应实现异步的 `call_action` 方法。
+    """
+    async def call_action(
+            self,
+            action: str,
+            **params
+        ) -> Any:
+        """
+        异步地调用 Mirai API，`action` 为要调用的 API 动作名，`**params`
+        为 API 所需参数。
+        """
+        ...
+
+
+class AsyncSessionApi(SessionApi, AsyncApi):
+    """
+    异步 API 接口类，提供会话相关接口。
+    继承此类的具体实现类应实现异步的 `call_action` 方法。
+    """
+    ...
