@@ -3,8 +3,12 @@
 """
 
 __all__ = [
-    'Error', 'ApiNotAvailable', 'ApiError',
-    'HttpFailed', 'ActionFailed', 'NetworkError', 'TimingError',
+    'ApiNotAvailable',
+    'ApiError',
+    'AuthenticateError',
+    'HttpFailed',
+    'ActionFailed',
+    'NetworkError',
 ]
 
 
@@ -23,9 +27,13 @@ class ApiError(Error, RuntimeError):
     pass
 
 
+class AuthenticateError(Error):
+    """未指定 auth_key 或 auth_key 错误。"""
+    pass
+
+
 class HttpFailed(ApiError):
     """HTTP 请求响应码不是 2xx。"""
-
     def __init__(self, status_code: int):
         self.status_code = status_code
         """HTTP 响应码。"""
@@ -41,7 +49,6 @@ class ActionFailed(ApiError):
     """
     Mirai API HTTP 已收到 API 请求，但执行失败。
     """
-
     def __init__(self, retcode: int, msg: str):
         self.retcode = retcode
         self.msg = msg
@@ -55,9 +62,4 @@ class ActionFailed(ApiError):
 
 class NetworkError(Error, IOError):
     """网络错误。"""
-    pass
-
-
-class TimingError(Error):
-    """时机错误。"""
     pass

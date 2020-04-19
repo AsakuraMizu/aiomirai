@@ -31,4 +31,6 @@ class AsyncApi(Api):
 
 
 class AsyncSessionApi(SessionApi, AsyncApi):
-    pass
+    @abc.abstractmethod
+    async def auth(self) -> Dict[str, Any]:
+        pass
