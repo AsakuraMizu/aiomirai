@@ -1,6 +1,6 @@
 from typing import Union, Awaitable, Any, Optional, Dict, List
 
-from aiomirai.typing import MessageChain_T
+from .message import MessageChain
 
 
 class Api:
@@ -64,7 +64,7 @@ class SessionApi(Api):
     def send_friend_message(
             self, *,
             target: int,
-            message_chain: MessageChain_T,
+            message_chain: MessageChain,
             quote: Optional[int] = None
         ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
@@ -80,7 +80,7 @@ class SessionApi(Api):
     def send_temp_message(
             self, *,
             target: int,
-            message_chain: MessageChain_T,
+            message_chain: MessageChain,
             quote: Optional[int] = None
         ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """
@@ -96,7 +96,7 @@ class SessionApi(Api):
     def send_group_message(
             self, *,
             target: int,
-            message_chain: MessageChain_T,
+            message_chain: MessageChain,
             quote: Optional[int] = None
         ) -> Union[Awaitable[Dict[str, Any]], Dict[str, Any]]:
         """

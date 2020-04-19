@@ -3,6 +3,11 @@ from typing import Any, Dict, Iterable, Optional, Tuple, Union
 
 from .utils import camelCase
 
+__all__ = [
+    'MessageSegment', 'MessageChain', 'At', 'AtAll', 'Face', 'Plain', 'Image',
+    'FlashImage', 'Xml', 'Json', 'App', 'Poke'
+]
+
 
 class MessageSegment(dict):
     """
@@ -77,6 +82,9 @@ def Plain(text: str) -> MessageSegment:
     return MessageSegment(type='Plain', text=text)
 
 
+_SCHEMES = ('http://', 'https://', 'ftp://')
+
+
 def Image(image: str) -> MessageSegment:
     if re.match(
             r'\{[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}\}.png',
@@ -85,7 +93,7 @@ def Image(image: str) -> MessageSegment:
             r'/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',
             image):
         return MessageSegment(type='Image', image_id=image)
-    elif image.startswith(('http://', 'https://', 'ftp://')):
+    elif image.startswith(_SCHEMES):
         return MessageSegment(type='Image', url=image)
     else:
         return MessageSegment(type='Image', path=image)
@@ -99,7 +107,7 @@ def FlashImage(image: str) -> MessageSegment:
             r'/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',
             image):
         return MessageSegment(type='FlashImage', image_id=image)
-    elif image.startswith(('http://', 'https://', 'ftp://')):
+    elif image.startswith(_SCHEMES):
         return MessageSegment(type='FlashImage', url=image)
     else:
         return MessageSegment(type='FlashImage', path=image)

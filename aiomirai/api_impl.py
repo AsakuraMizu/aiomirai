@@ -7,23 +7,19 @@ import asyncio
 from typing import Any, Awaitable, Callable, Dict, Optional, Union
 
 import httpx
-from quart import websocket
 
 from .api import Api, AsyncApi, AsyncSessionApi
-from .exception import ActionFailed, ApiNotAvailable, HttpFailed, NetworkError
+from .exception import (ActionFailed, ApiNotAvailable, AuthenticateError,
+                        HttpFailed, NetworkError)
+from .logger import Api as Logger
 from .utils import camelCase, sync_wait
 
-try:
-    import ujson as json
-except:
-    import json
-
-
-def _handle_api_result(res: Optional[Dict[str, Any]]) -> Any:
-    if isinstance(res, dict):
-        if not res.get('code') == 0:
-            raise ActionFailed(res.get('code'), res.get('msg'))
-        return res
+__all__ = [
+    'HttpApi',
+    'HttpSessionApi',
+    'SyncApi',
+    'LazyApi',
+]
 
 
 class HttpApi(AsyncApi):
@@ -31,13 +27,14 @@ class HttpApi(AsyncApi):
     HTTP API 实现类。
     实现通过 HTTP 调用 CQHTTP API。
     """
-    def __init__(self, api_root: str, auth_key: str):
+    def __init__(self, api_root: str):
         self._api_root = api_root.strip('/') + '/' if api_root else None
-        self._auth_key = auth_key
 
     async def call_action(self, action: str, **params) -> Any:
         if not self._api_root:
             raise ApiNotAvailable
+
+        Logger.info('Calling %s with params: %s', action, str(params))
 
         params = {camelCase(k): v for k, v in params.items()}
         if action.startswith(('get', 'fetch', 'peek')):
@@ -56,9 +53,11 @@ class HttpApi(AsyncApi):
                                             url,
                                             json=data,
                                             params=params)
-            print(resp.request.stream.body)
             if 200 <= resp.status_code < 300 or resp.status_code == 400:
-                return _handle_api_result(json.loads(resp.text))
+                res = resp.json()
+                if res.get('code') == 0:
+                    return res
+                raise ActionFailed(res.get('code'), res.get('msg'))
             raise HttpFailed(resp.status_code)
         except httpx.InvalidURL:
             raise NetworkError('API root url invalid')
@@ -72,10 +71,13 @@ class HttpSessionApi(AsyncSessionApi, HttpApi):
     实现通过 HTTP 调用 CQHTTP API。
     """
     def __init__(self, api_root: str, auth_key: str, qq: int):
-        super().__init__(api_root, auth_key)
+        super().__init__(api_root)
+        self._auth_key = auth_key
         self._qq = qq
 
     async def call_action(self, action: str, **params) -> Any:
+        if not self._auth_key:
+            raise AuthenticateError
         return await super().call_action(action,
                                          **params,
                                          session_key=self._session_key)

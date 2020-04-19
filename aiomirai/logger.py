@@ -1,10 +1,9 @@
 import logging
 import sys
 
-
 default_handler = logging.StreamHandler(sys.stdout)
 default_handler.setFormatter(logging.Formatter(
-    '[%(asctime)s][Mirai %(name)s] %(levelname)s: %(message)s'
+    '[%(asctime)s] [Mirai %(name)s] %(levelname)s: %(message)s'
 ))
 
 def Logger(name: str, level: int) -> logging.Logger:
@@ -13,4 +12,5 @@ def Logger(name: str, level: int) -> logging.Logger:
     logger.setLevel(level)
     return logger
 
-Event = Logger('Event', logging.INFO)
+Api = Logger('Api', logging.INFO)
+Receiver = Logger('Receiver', logging.INFO)
