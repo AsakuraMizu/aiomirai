@@ -1,5 +1,5 @@
 """
-此模块提供了 Mirai API HTTP 事件相关的类。
+此模块提供了 Mirai API HTTP 的事件相关类。
 """
 
 from typing import Any, Dict, Optional
