@@ -19,14 +19,18 @@ setuptools.setup(
         'License :: OSI Approved :: GNU Affero General Public License v3',
         'Operating System :: OS Independent',
         'Intended Audience :: Developers',
+        "Framework :: AsyncIO",
         'Framework :: Robot Framework',
         'Framework :: Robot Framework :: Library',
         'Topic :: Communications :: Chat',
         'Topic :: Internet',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3 :: Only',
     ],
     install_requires=[
         'httpx'
     ],
-    python_requires='>=3.8',
+    python_requires='>=3.7',
 )
