@@ -1,4 +1,4 @@
-from .api_impl import HttpApi, HttpSessionApi, LazyApi, SyncApi
+from .api import Api, SessionApi
 from .event import Event
 from .exception import *
 from .message import (MessageSegment, MessageChain, At, AtAll, Face, Plain,

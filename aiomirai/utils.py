@@ -6,8 +6,6 @@ import asyncio
 import re
 from typing import Any, Awaitable, Callable
 
-from quart.utils import run_sync
-
 
 def ensure_async(func: Callable[..., Any]) -> Callable[..., Awaitable[Any]]:
     """
@@ -34,11 +32,3 @@ def snake_case(name: str) -> str:
     """
     return re.sub(r'(.*?)([A-Z])',
                   lambda m: m.group(1) + '_' + m.group(2).lower(), name)
-
-
-def sync_wait(coro: Awaitable[Any], loop: asyncio.AbstractEventLoop) -> Any:
-    """
-    在 `loop` 中线程安全地运行 `coro`，并同步地等待其运行完成，返回运行结果。
-    """
-    fut = asyncio.run_coroutine_threadsafe(coro, loop)
-    return fut.result()
