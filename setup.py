@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='aiomirai',
-    version='0.1.0',
+    version='0.2.0',
     description='A framework for Tencent QQ headless client \'Mirai\'.',
     author='water_lift',
     author_email='0xWATERx0@gmail.com',
@@ -15,7 +15,7 @@ setuptools.setup(
     url='https://github.com/water-lift/aiomirai',
     packages=setuptools.find_packages(),
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: GNU Affero General Public License v3',
         'Operating System :: OS Independent',
         'Intended Audience :: Developers',
