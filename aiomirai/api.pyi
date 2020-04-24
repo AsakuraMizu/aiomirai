@@ -67,8 +67,8 @@ class SessionApi(Api):
     async def send_friend_message(
             self, *,
             target: int,
-            quote: Optional[int] = None
-            message_chain: MessageChain,
+            quote: Optional[int] = None,
+            message_chain: MessageChain
         ) -> Dict[str, Any]:
         """
         发送好友消息
@@ -84,8 +84,8 @@ class SessionApi(Api):
             self, *,
             qq: int,
             group: int,
-            message_chain: MessageChain,
-            quote: Optional[int] = None
+            quote: Optional[int] = None,
+            message_chain: MessageChain
         ) -> Dict[str, Any]:
         """
         发送临时会话消息
@@ -101,8 +101,8 @@ class SessionApi(Api):
     async def send_group_message(
             self, *,
             target: int,
-            message_chain: MessageChain,
-            quote: Optional[int] = None
+            quote: Optional[int] = None,
+            message_chain: MessageChain
         ) -> Dict[str, Any]:
         """
         发送群消息
