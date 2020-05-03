@@ -87,7 +87,7 @@ _SCHEMES = ('http://', 'https://', 'ftp://')
 
 def Image(image: str) -> MessageSegment:
     if re.match(
-            r'\{[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}\}.png',
+            r'\{[A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12}\}.mirai',
             image
     ) or re.match(
             r'/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',
