@@ -7,7 +7,13 @@ class Api:
     """
     API 基类。
     实现通过 HTTP 调用 Mirai API HTTP。
+
+    Args:
+        api_root: Mirai API HTTP 地址
     """
+    def __init__(self, api_root: str):
+        ...
+
     async def call_action(
             self,
             action: str,
@@ -37,7 +43,19 @@ class Api:
 class SessionApi(Api):
     """
     会话相关 API 实现类。
+
+    Args:
+        api_root: Mirai API HTTP 地址
+        auth_key: 创建 Mirai-Http-Server 时生成的 key，可在启动时指定或随机生成
+        qq: Session 将要绑定的 Bot 的 qq 号
     """
+    def __init__(
+            self,
+            api_root: str,
+            auth_key: str,
+            qq: int
+        ) -> None:
+        ...
 
     async def auth(
             self
