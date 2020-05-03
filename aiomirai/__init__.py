@@ -1,6 +1,6 @@
 from .api import Api, SessionApi
 from .event import Event
 from .exception import *
-from .message import (MessageSegment, MessageChain, At, AtAll, Face, Plain,
-                      Image, FlashImage, Xml, Json, App, Poke)
+from .message import (App, At, AtAll, Face, FlashImage, Image, Json,
+                      MessageChain, MessageSegment, Plain, Poke, Xml)
 from .receiver import HttpReceiver

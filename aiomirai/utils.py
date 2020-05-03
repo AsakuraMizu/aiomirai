@@ -7,17 +7,6 @@ import re
 from typing import Any, Awaitable, Callable
 
 
-def ensure_async(func: Callable[..., Any]) -> Callable[..., Awaitable[Any]]:
-    """
-    确保可调用对象 `func` 为异步函数，如果不是，则使用 `run_sync`
-    包裹，使其在 asyncio 的默认 executor 中运行。
-    """
-    if asyncio.iscoroutinefunction(func):
-        return func
-    else:
-        return run_sync(func)
-
-
 def camelCase(name: str) -> str:
     """
     将下划线命名法(snake_case)转换为小驼峰式命名法(camelCase)。

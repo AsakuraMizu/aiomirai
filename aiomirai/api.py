@@ -3,7 +3,7 @@
 """
 
 from functools import partial
-from typing import Any, Awaitable,  Callable, Dict, Optional, Union
+from typing import Any, Awaitable, Callable, Dict, Optional, Union
 
 import httpx
 
@@ -13,7 +13,6 @@ from .utils import camelCase
 
 
 class Api:
-
     def __init__(self, api_root: str):
         self._api_root = api_root.strip('/') + '/' if api_root else None
 
@@ -51,8 +50,7 @@ class Api:
         except httpx.HTTPError:
             raise NetworkError('HTTP request failed')
 
-    def __getattr__(self,
-                    item: str) -> Callable[..., Awaitable[Any]]:
+    def __getattr__(self, item: str) -> Callable[..., Awaitable[Any]]:
         """获取一个可调用对象，用于调用对应 API。"""
         return partial(self.call_action, item)
 
@@ -68,8 +66,8 @@ class SessionApi(Api):
             raise Unauthenticated
         try:
             return await super().call_action(action,
-                                            **params,
-                                            session_key=self._session_key)
+                                             **params,
+                                             session_key=self._session_key)
         except ActionFailed as _e:
             switcher = {
                 1: InvalidAuthKey,
@@ -81,7 +79,6 @@ class SessionApi(Api):
             if not e:
                 raise _e
             raise e(_e.code, _e.msg)
-
 
     async def auth(self) -> Dict[str, Any]:
         r = await super().call_action('auth', auth_key=self._auth_key)

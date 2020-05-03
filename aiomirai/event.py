@@ -12,14 +12,12 @@ __all__ = ['Event', 'from_payload']
 
 
 class Event(dict):
-
     @property
     def type(self) -> str:
         return self['type']
 
     def __repr__(self) -> str:
         return f'<{self.__class__.__name__}, {super().__repr__()}>'
-
 
 
 def from_payload(payload: Dict[str, Any]) -> Optional[Event]:
@@ -37,6 +35,7 @@ def from_payload(payload: Dict[str, Any]) -> Optional[Event]:
             return [_parse(x) for x in data]
         else:
             return data
+
     try:
         e = Event(_parse(payload))
         _ = e.type
