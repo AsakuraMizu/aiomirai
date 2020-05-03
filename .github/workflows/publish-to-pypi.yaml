@@ -1,9 +1,8 @@
 name: Publish to PyPI
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -28,5 +27,4 @@ jobs:
       - name: Publish Package
         uses: pypa/gh-action-pypi-publish@master
         with:
-          user: __token__
           password: ${{ secrets.pypitoken }}
