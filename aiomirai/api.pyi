@@ -1,7 +1,6 @@
-from typing import Union, Awaitable, Any, Optional, Dict, List
+from typing import IO, Any, Awaitable, Dict, List, Optional, Union
 
 from .message import MessageChain
-
 
 class Api:
     """
@@ -154,7 +153,7 @@ class SessionApi(Api):
     async def upload_image(
             self, *,
             type: str,
-            img: bytes
+            img: IO
         ) -> Dict[str, Any]:
         """
         上传图片文件

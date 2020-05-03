@@ -3,7 +3,7 @@
 """
 
 from functools import partial
-from typing import Any, Awaitable, Callable, Dict, Optional, Union
+from typing import IO, Any, Awaitable, Callable, Dict, Optional, Union
 
 import httpx
 
@@ -24,25 +24,21 @@ class Api:
         if action.startswith(('get', 'fetch', 'peek')):
             action = action.split('get_', 1)[-1]
             method = 'GET'
-            data = None
+            params = {'params': params}
         else:
             method = 'POST'
-            data = params
-            params = None
+            params = {'json': params}
         url = self._api_root + camelCase(action)
 
         try:
             async with httpx.AsyncClient() as client:
-                resp = await client.request(method,
-                                            url,
-                                            json=data,
-                                            params=params)
-            if 200 <= resp.status_code < 300 or resp.status_code == 400:
+                resp = await client.request(method, url, **params)
+            if 200 <= resp.status_code < 300:
+                return resp.json()
+            elif resp.status_code == 400:
                 res = resp.json()
                 code = res.get('code')
                 msg = res.get('msg')
-                if code == 0 or (method == 'GET' and code == None):
-                    return res
                 raise ActionFailed(code, msg)
             raise HttpFailed(resp.status_code)
         except httpx.InvalidURL:
@@ -79,6 +75,45 @@ class SessionApi(Api):
             if not e:
                 raise _e
             raise e(_e.code, _e.msg)
+
+    async def upload_image(self, type: str, img: IO) -> Dict[str, Any]:
+        if not self._session_key:
+            raise Unauthenticated
+        try:
+            Logger.info('Calling %s with params: %s', 'upload_image', {
+                'type': type,
+                'img': img
+            })
+            async with httpx.AsyncClient() as client:
+                resp = await client.post(self._api_root + 'uploadImage',
+                                         data={
+                                             'type': type,
+                                             'sessionKey': self._session_key
+                                         },
+                                         files={'img': img})
+            if 200 <= resp.status_code < 300:
+                return resp.json()
+            elif resp.status_code == 400:
+                res = resp.json()
+                code = res.get('code')
+                msg = res.get('msg')
+                raise ActionFailed(code, msg)
+            raise HttpFailed(resp.status_code)
+        except ActionFailed as _e:
+            switcher = {
+                1: InvalidAuthKey,
+                2: InvaildBot,
+                3: InvaildSession,
+                4: Unverified
+            }
+            e = switcher.get(_e.code)
+            if not e:
+                raise _e
+            raise e(_e.code, _e.msg)
+        except httpx.InvalidURL:
+            raise NetworkError('API root url invalid')
+        except httpx.HTTPError:
+            raise NetworkError('HTTP request failed')
 
     async def auth(self) -> Dict[str, Any]:
         r = await super().call_action('auth', auth_key=self._auth_key)
