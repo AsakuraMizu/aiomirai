@@ -68,6 +68,7 @@ class SessionApi(Api):
         super().__init__(api_root)
         self._auth_key = auth_key
         self._qq = qq
+        self._session_key = None
 
     async def call_action(self, action: str, **params) -> Any:
         if not self._session_key:
