@@ -2,7 +2,7 @@
 此模块提供了 Mirai API HTTP 的 API 调用相关类。
 """
 
-from functools import partial
+from functools import wraps
 from typing import IO, Any, Awaitable, Callable, Dict, Optional, Union
 
 import httpx
@@ -20,7 +20,6 @@ class Api:
 
         Logger.info('Calling %s with params: %s', action, str(params))
 
-        params = {camelCase(k): v for k, v in params.items()}
         if action.startswith(('get', 'fetch', 'peek')):
             action = action.split('get_', 1)[-1]
             method = 'GET'
@@ -28,7 +27,7 @@ class Api:
         else:
             method = 'POST'
             params = {'json': params}
-        url = self._api_root + camelCase(action)
+        url = self._api_root + action
 
         try:
             async with httpx.AsyncClient() as client:
@@ -48,7 +47,20 @@ class Api:
 
     def __getattr__(self, item: str) -> Callable[..., Awaitable[Any]]:
         """获取一个可调用对象，用于调用对应 API。"""
-        return partial(self.call_action, item)
+        def _parse(data):
+            if isinstance(data, dict):
+                return {camelCase(k): _parse(v) for k, v in data.items()}
+            elif isinstance(data, list):
+                return [_parse(x) for x in data]
+            else:
+                return data
+
+        @wraps(self.call_action)
+        async def wrapper(**params):
+            params = _parse(params)
+            return await self.call_action(camelCase(item), **params)
+
+        return wrapper
 
 
 class SessionApi(Api):
@@ -63,7 +75,7 @@ class SessionApi(Api):
         try:
             return await super().call_action(action,
                                              **params,
-                                             session_key=self._session_key)
+                                             sessionKey=self._session_key)
         except ActionFailed as _e:
             switcher = {
                 1: InvalidAuthKey,
@@ -116,7 +128,7 @@ class SessionApi(Api):
             raise NetworkError('HTTP request failed')
 
     async def auth(self) -> Dict[str, Any]:
-        r = await super().call_action('auth', auth_key=self._auth_key)
+        r = await super().call_action('auth', authKey=self._auth_key)
         self._session_key = r.get('session')
         return r
 
