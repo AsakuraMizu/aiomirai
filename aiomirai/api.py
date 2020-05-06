@@ -33,14 +33,17 @@ class Api:
         try:
             async with httpx.AsyncClient() as client:
                 resp = await client.request(method, url, **params)
-            if 200 <= resp.status_code < 300:
-                return resp.json()
-            elif resp.status_code == 400:
+            try:
                 res = resp.json()
-                code = res.get('code')
-                msg = res.get('msg')
-                raise ActionFailed(code, msg)
-            raise HttpFailed(resp.status_code)
+            except Exception as e:
+                if not 200 <= resp.status_code < 300:
+                    raise HttpFailed(resp.status_code)
+                raise e
+            code = res.get('code')
+            if code == 0 or code == None:
+                return res
+            msg = res.get('msg')
+            raise ActionFailed(code, msg)
         except httpx.InvalidURL:
             raise NetworkError('API root url invalid')
         except httpx.HTTPError:
@@ -92,14 +95,17 @@ class SessionApi(Api):
                                              'sessionKey': self._session_key
                                          },
                                          files={'img': img})
-            if 200 <= resp.status_code < 300:
-                return resp.json()
-            elif resp.status_code == 400:
+            try:
                 res = resp.json()
-                code = res.get('code')
-                msg = res.get('msg')
-                raise ActionFailed(code, msg)
-            raise HttpFailed(resp.status_code)
+            except Exception as e:
+                if not 200 <= resp.status_code < 300:
+                    raise HttpFailed(resp.status_code)
+                raise e
+            code = res.get('code')
+            if code == 0 or code == None:
+                return res
+            msg = res.get('msg')
+            raise ActionFailed(code, msg)
         except ActionFailed as _e:
             switcher = {
                 1: InvalidAuthKey,

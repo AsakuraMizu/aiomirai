@@ -1,3 +1,7 @@
+"""
+此模块提供了消息相关类。
+参考了https://github.com/cqmoe/python-aiocqhttp/blob/master/aiocqhttp/message.py
+"""
 import re
 from typing import Any, Dict, Iterable, Optional, Tuple, Union
 
