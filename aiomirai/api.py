@@ -16,19 +16,29 @@ class Api:
     def __init__(self, api_root: str):
         self._api_root = api_root.strip('/') + '/' if api_root else None
 
-    async def call_action(self, action: str, **params) -> Any:
+    async def call_action(self,
+                          action: str,
+                          method: Optional[str] = 'POST',
+                          **params) -> Any:
 
         Logger.info('Calling %s with params: %s', action, str(params))
 
-        params = {camelCase(k): v for k, v in params.items()}
-        if action.startswith(('get', 'fetch', 'peek')):
-            action = action.split('get_', 1)[-1]
-            method = 'GET'
-            params = {'params': params}
-        else:
-            method = 'POST'
-            params = {'json': params}
+        def _parse(data):
+            if isinstance(data, dict):
+                return {camelCase(k): _parse(v) for k, v in data.items()}
+            elif isinstance(data, list):
+                return [_parse(x) for x in data]
+            else:
+                return data
+
+        params = _parse(params)
         url = self._api_root + camelCase(action)
+
+        if not any(x in params for x in ('data', 'file', 'json', 'params')):
+            if method == 'GET':
+                params = {'params': params}
+            else:
+                params = {'json': params}
 
         try:
             async with httpx.AsyncClient() as client:
@@ -61,11 +71,15 @@ class SessionApi(Api):
         self._qq = qq
         self._session_key = None
 
-    async def call_action(self, action: str, **params) -> Any:
+    async def call_action(self,
+                          action: str,
+                          method: Optional[str] = 'POST',
+                          **params) -> Any:
         if not self._session_key:
             raise Unauthenticated
         try:
             return await super().call_action(action,
+                                             method,
                                              **params,
                                              session_key=self._session_key)
         except ActionFailed as _e:
@@ -81,46 +95,9 @@ class SessionApi(Api):
             raise e(_e.code, _e.msg)
 
     async def upload_image(self, type: str, img: IO) -> Dict[str, Any]:
-        if not self._session_key:
-            raise Unauthenticated
-        try:
-            Logger.info('Calling %s with params: %s', 'upload_image', {
-                'type': type,
-                'img': img
-            })
-            async with httpx.AsyncClient() as client:
-                resp = await client.post(self._api_root + 'uploadImage',
-                                         data={
-                                             'type': type,
-                                             'sessionKey': self._session_key
-                                         },
-                                         files={'img': img})
-            try:
-                res = resp.json()
-            except Exception as e:
-                if not 200 <= resp.status_code < 300:
-                    raise HttpFailed(resp.status_code)
-                raise e
-            code = res.get('code')
-            if code == 0 or code == None:
-                return res
-            msg = res.get('msg')
-            raise ActionFailed(code, msg)
-        except ActionFailed as _e:
-            switcher = {
-                1: InvalidAuthKey,
-                2: InvaildBot,
-                3: InvaildSession,
-                4: Unverified
-            }
-            e = switcher.get(_e.code)
-            if not e:
-                raise _e
-            raise e(_e.code, _e.msg)
-        except httpx.InvalidURL:
-            raise NetworkError('API root url invalid')
-        except httpx.HTTPError:
-            raise NetworkError('HTTP request failed')
+        return await self.call_action('upload_image',
+                                      data={'type': type},
+                                      files={'img': img})
 
     async def auth(self) -> Dict[str, Any]:
         r = await super().call_action('auth', auth_key=self._auth_key)
