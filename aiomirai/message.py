@@ -49,6 +49,8 @@ class MessageSegment(dict):
         self['type'] = type_
 
     def __str__(self):
+        if self.type == 'Plain':
+            return self['text']
         params = ','.join(f'{k}={str(self[k])}'
                           for k in self.keys() - {'type'})
         if params:
