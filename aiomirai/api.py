@@ -6,6 +6,7 @@ from functools import partial
 from typing import IO, Any, Awaitable, Callable, Dict, Optional, Union
 
 import httpx
+from httpx._models import RequestData, RequestFiles, QueryParamTypes
 
 from .exception import *
 from .logger import Api as Logger
@@ -19,9 +20,24 @@ class Api:
     async def call_action(self,
                           action: str,
                           method: Optional[str] = 'POST',
-                          **params) -> Any:
+                          format: Optional[str] = 'json',
+                          *,
+                          data: Optional[RequestData] = None,
+                          files: Optional[RequestFiles] = None,
+                          json: Optional[Any] = None,
+                          params: Optional[QueryParamTypes] = None,
+                          **kwargs) -> Any:
 
-        Logger.info('Calling %s with params: %s', action, str(params))
+        if method == 'GET':
+            format = 'params'
+
+        args = locals().copy()
+        del args['self']
+        del args['action']
+        args = {k: v for k, v in args.items() if v}
+        Logger.info('Calling %s with params: %s', action, repr(args))
+
+        mix = {'data': data, 'files': files, 'json': json, 'params': params}
 
         def _parse(data):
             if isinstance(data, dict):
@@ -31,26 +47,27 @@ class Api:
             else:
                 return data
 
-        params = _parse(params)
-        url = self._api_root + camelCase(action)
+        mix = _parse(mix)
+        kwargs = _parse(kwargs)
 
-        if not any(x in params for x in ('data', 'file', 'json', 'params')):
-            if method == 'GET':
-                params = {'params': params}
-            else:
-                params = {'json': params}
+        mix[format] = mix[format] or {}
+        mix[format].update(kwargs)
+
+        url = self._api_root + camelCase(action)
 
         try:
             async with httpx.AsyncClient() as client:
-                resp = await client.request(method, url, **params)
+                resp = await client.request(method, url, **mix)
             try:
                 res = resp.json()
             except Exception as e:
                 if not 200 <= resp.status_code < 300:
                     raise HttpFailed(resp.status_code)
                 raise e
+            if not isinstance(res, dict):
+                return res
             code = res.get('code')
-            if code == 0 or code == None:
+            if code == 0 or code is None:
                 return res
             msg = res.get('msg')
             raise ActionFailed(code, msg)
@@ -61,6 +78,8 @@ class Api:
 
     def __getattr__(self, item: str) -> Callable[..., Awaitable[Any]]:
         """获取一个可调用对象，用于调用对应 API。"""
+        if item.startswith(('get', 'fetch', 'peek')):
+            return partial(self.call_action, item.split('get_', 1)[-1], 'GET')
         return partial(self.call_action, item)
 
 
@@ -74,12 +93,14 @@ class SessionApi(Api):
     async def call_action(self,
                           action: str,
                           method: Optional[str] = 'POST',
+                          format: Optional[str] = 'json',
                           **params) -> Any:
         if not self._session_key:
             raise Unauthenticated
         try:
             return await super().call_action(action,
                                              method,
+                                             format,
                                              **params,
                                              session_key=self._session_key)
         except ActionFailed as _e:
@@ -96,11 +117,12 @@ class SessionApi(Api):
 
     async def upload_image(self, type: str, img: IO) -> Dict[str, Any]:
         return await self.call_action('upload_image',
+                                      format='data',
                                       data={'type': type},
                                       files={'img': img})
 
     async def auth(self) -> Dict[str, Any]:
-        r = await super().call_action('auth', auth_key=self._auth_key)
+        r = await Api.call_action(self, 'auth', auth_key=self._auth_key)
         self._session_key = r.get('session')
         return r
 

@@ -16,6 +16,8 @@ class Api:
     async def call_action(
             self,
             action: str,
+            method: Optional[str] = 'POST',
+            format: Optional[str] = 'json',
             **params
         ) -> Any:
         """
@@ -23,6 +25,8 @@ class Api:
 
         Args:
             action: 所要调用的 API 名。
+            method: 调用 API 所使用的 http method。
+            format: 上报格式（可选的值有：data / json / params）
             params: API 所需参数
 
         Returns:
