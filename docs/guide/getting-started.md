@@ -10,11 +10,11 @@ from aiomirai import (Event,        # Mirai Api HTTP 上报的事件
                       SessionApi)   # 会话相关 API, 详见后文
 
 # 需要安装 aiomirai[report]
-from aiomirai import HttpReceiver
+from aiomirai import ReportReceiver
 from quart import Quart
 
 app = Quart(__name__)   # 使用 Quart 维护一个 Web 服务器
-rec = HttpReceiver(app) # Mirai 消息接收器
+rec = ReportReceiver(app) # Mirai 消息接收器
 
 api = SessionApi(
     'http://localhost:1080',    # Mirai API HTTP 所在主机的地址

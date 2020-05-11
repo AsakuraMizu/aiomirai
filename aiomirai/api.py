@@ -12,6 +12,8 @@ from .exception import *
 from .logger import Api as Logger
 from .utils import camelCase
 
+__all__ = ['Api', 'SessionApi']
+
 
 class Api:
     def __init__(self, api_root: str):

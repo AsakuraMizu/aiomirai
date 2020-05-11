@@ -1,9 +1,9 @@
 from quart import Quart
 
-from aiomirai import Event, HttpReceiver, MessageChain, SessionApi
+from aiomirai import Event, ReportReceiver, MessageChain, SessionApi
 
 app = Quart(__name__)
-rec = HttpReceiver(app)
+rec = ReportReceiver(app)
 api = SessionApi('http://localhost:8080', 'authKey', 10000)
 
 @rec.on('FriendMessage')
