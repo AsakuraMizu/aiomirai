@@ -130,7 +130,10 @@ class SessionApi(Api):
         return await self.call_action('verify', qq=self._qq)
 
     async def release(self) -> Dict[str, Any]:
-        return await self.call_action('release', qq=self._qq)
+        try:
+            return await self.call_action('release', qq=self._qq)
+        finally:
+            self._session_key = None
 
     async def __aenter__(self) -> 'SessionApi':
         await self.auth()
