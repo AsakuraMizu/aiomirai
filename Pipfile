@@ -6,11 +6,11 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 yapf = "*"
-aiomirai = {editable = true,path = "."}
+aiomirai = {editable = true,extras = ["all"],path = "."}
+quart = "*"
 
 [packages]
 httpx = "*"
-quart = "*"
 
 [requires]
 python_version = "3.8"

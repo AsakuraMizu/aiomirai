@@ -33,7 +33,11 @@ setuptools.setup(
         'Programming Language :: Python :: 3 :: Only',
     ],
     install_requires=[
-        'httpx'
+        'httpx',
     ],
+    extras_require={
+        'all': ['quart'],
+        'report': ['quart'],
+    },
     python_requires='>=3.7',
 )
