@@ -27,12 +27,15 @@ class MessageSegment(dict):
     ```
     """
     def __init__(self,
-                 d: Optional[Dict[str, Any]] = None,
+                 d: Optional[Union[str, Dict[str, Any]]] = None,
                  *,
                  type: Optional[str] = None,
                  **extra):
         super().__init__()
-        if isinstance(d, dict) and d.get('type'):
+        if isinstance(d, str):
+            self['type'] = 'Plain'
+            self['text'] = d
+        elif isinstance(d, dict) and d.get('type'):
             self.update(d)
         elif type:
             self.type = type
@@ -179,8 +182,6 @@ class MessageChain(list):
                     self[-1]['text'] += obj['text']
                 elif obj.type != 'text' or obj['text'] or not self:
                     super().append(obj)
-            elif isinstance(obj, str):
-                self.append(Plain(obj))
             else:
                 self.append(MessageSegment(obj))
             return self
