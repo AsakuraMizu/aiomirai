@@ -135,6 +135,34 @@ class SessionApi(Api):
         finally:
             self._session_key = None
 
+    async def resp_new_friend(self,
+                              *,
+                              event_id: int,
+                              from_id: int,
+                              group_id: int,
+                              operate: Optional[int] = 0,
+                              message: Optional[str] = "") -> Dict[str, Any]:
+        return await self.call_action('resp/new_friend_request_event',
+                                      event_id=event_id,
+                                      from_id=from_id,
+                                      group_id=group_id,
+                                      operate=operate,
+                                      message=message)
+
+    async def resp_member_join(self,
+                               *,
+                               event_id: int,
+                               from_id: int,
+                               group_id: int,
+                               operate: Optional[int] = 0,
+                               message: Optional[str] = "") -> Dict[str, Any]:
+        return await self.call_action('resp/member_join_request_event',
+                                      event_id=event_id,
+                                      from_id=from_id,
+                                      group_id=group_id,
+                                      operate=operate,
+                                      message=message)
+
     async def __aenter__(self) -> 'SessionApi':
         await self.auth()
         await self.verify()

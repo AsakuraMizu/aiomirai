@@ -423,3 +423,45 @@ class SessionApi(Api):
             enable_websocket: 是否开启Websocket
         """
         ...
+
+    async def resp_new_friend(
+            self, *,
+            event_id: int,
+            from_id: int,
+            group_id: int,
+            operate: Optional[int] = 0,
+            message: Optional[str] = ""
+        ) -> Dict[str, Any]:
+        """
+        响应添加好友申请
+
+        Args:
+            event_id: 响应申请事件的标识
+            from_id: 事件对应申请人 QQ 号
+            group_id: 事件对应申请人的群号，可能为0
+            operate: 响应的操作类型，0表示同意添加好友，1表示拒绝添加好友，2表示拒绝添加好友并添加黑名单，
+                     不再接收该用户的好友申请
+            message: 回复的信息
+        """
+        ...
+
+    async def resp_member_join(
+            self, *,
+            event_id: int,
+            from_id: int,
+            group_id: int,
+            operate: Optional[int] = 0,
+            message: Optional[str] = ""
+        ) -> Dict[str, Any]:
+        """
+        响应用户入群申请（Bot需要有管理员权限）
+
+        Args:
+            event_id: 响应申请事件的标识
+            from_id: 事件对应申请人QQ号
+            group_id: 事件对应申请人的群号，可能为0
+            operate: 响应的操作类型，0表示同意入群，1表示拒绝入群，2表示忽略请求，3表示拒绝入群并添加黑名单，
+                     不再接收该用户的入群申请，4表示忽略入群并添加黑名单，不再接收该用户的入群申请
+            message: 回复的信息
+        """
+        ...
