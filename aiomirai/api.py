@@ -3,14 +3,14 @@
 """
 
 from functools import partial
-from typing import IO, Any, Awaitable, Callable, Dict, Optional, Union
+from typing import IO, Any, Awaitable, Callable, Dict, Optional
 
 import httpx
 from httpx._models import RequestData, RequestFiles, QueryParamTypes
 
 from .exception import *
 from .logger import Api as Logger
-from .utils import camelCase
+from .utils import camelCase, snake_case
 
 __all__ = ['Api', 'SessionApi']
 
@@ -41,16 +41,16 @@ class Api:
 
         mix = {'data': data, 'files': files, 'json': json, 'params': params}
 
-        def _parse(data):
+        def _parse(data, func):
             if isinstance(data, dict):
-                return {camelCase(k): _parse(v) for k, v in data.items()}
+                return {func(k): _parse(v, camelCase) for k, v in data.items()}
             elif isinstance(data, list):
-                return [_parse(x) for x in data]
+                return [func(x) for x in data]
             else:
                 return data
 
-        mix = _parse(mix)
-        kwargs = _parse(kwargs)
+        mix = _parse(mix, camelCase)
+        kwargs = _parse(kwargs, camelCase)
 
         mix[format] = mix[format] or {}
         mix[format].update(kwargs)
@@ -66,6 +66,7 @@ class Api:
                 if not 200 <= resp.status_code < 300:
                     raise HttpFailed(resp.status_code)
                 raise e
+            res = _parse(res, snake_case)
             if not isinstance(res, dict):
                 return res
             code = res.get('code')

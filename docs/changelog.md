@@ -8,6 +8,7 @@ sidebar: auto
 ### API
 + 使用 `quit` 方法退出群聊
 + `api_root`, `auth_key`, `qq`, `session_key` 修改为公共属性, 并添加至 `api.pyi`
++ **BREAKING CHANGE:** 调用 API 的返回值也应 `snake_case` 化
 
 ## v0.3.0
 **此版本存在严重 BUG, 请使用 v0.3.1 代替**
