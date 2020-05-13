@@ -2,9 +2,7 @@
 此模块提供了工具函数。
 """
 
-import asyncio
 import re
-from typing import Any, Awaitable, Callable
 
 
 def camelCase(name: str) -> str:
