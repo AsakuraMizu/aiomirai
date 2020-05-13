@@ -10,6 +10,8 @@ class Api:
     Args:
         api_root: Mirai API HTTP 地址
     """
+    api_root: str
+
     def __init__(self, api_root: str):
         ...
 
@@ -49,15 +51,20 @@ class SessionApi(Api):
 
     Args:
         api_root: Mirai API HTTP 地址
-        auth_key: 创建 Mirai-Http-Server 时生成的 key，可在启动时指定或随机生成
+        auth_key: 创建 Mirai Http Server 时生成的 key，可在启动时指定或随机生成
         qq: Session 将要绑定的 Bot 的 qq 号
     """
+    auth_key: str
+    qq: int
+    session: Optional[str]
+
     def __init__(
             self,
             api_root: str,
             auth_key: str,
             qq: int
         ) -> None:
+        super().__init__(api_root)
         ...
 
     async def auth(
@@ -167,7 +174,7 @@ class SessionApi(Api):
             img: 图片文件
         """
         ...
-    
+
     async def recall(
             self, *,
             target: int
@@ -343,6 +350,18 @@ class SessionApi(Api):
             target: 指定群的群号
             member_id: 指定群员QQ号
             msg: 信息
+        """
+        ...
+
+    async def quit(
+            self, *,
+            target: int
+        ) -> Dict[str, Any]:
+        """
+        使 Bot 退出群聊
+
+        Args:
+            target: 指定群的群号
         """
         ...
 

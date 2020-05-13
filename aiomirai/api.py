@@ -17,7 +17,7 @@ __all__ = ['Api', 'SessionApi']
 
 class Api:
     def __init__(self, api_root: str):
-        self._api_root = api_root.strip('/') + '/' if api_root else None
+        self.api_root = api_root.strip('/') + '/' if api_root else None
 
     async def call_action(self,
                           action: str,
@@ -55,7 +55,7 @@ class Api:
         mix[format] = mix[format] or {}
         mix[format].update(kwargs)
 
-        url = self._api_root + camelCase(action)
+        url = self.api_root + camelCase(action)
 
         try:
             async with httpx.AsyncClient() as client:
@@ -88,23 +88,23 @@ class Api:
 class SessionApi(Api):
     def __init__(self, api_root: str, auth_key: str, qq: int):
         super().__init__(api_root)
-        self._auth_key = auth_key
-        self._qq = qq
-        self._session_key = None
+        self.auth_key = auth_key
+        self.qq = qq
+        self.session_key = None
 
     async def call_action(self,
                           action: str,
                           method: Optional[str] = 'POST',
                           format: Optional[str] = 'json',
                           **params) -> Any:
-        if not self._session_key:
+        if not self.session_key:
             raise Unauthenticated
         try:
             return await super().call_action(action,
                                              method,
                                              format,
                                              **params,
-                                             session_key=self._session_key)
+                                             session_key=self.session_key)
         except ActionFailed as _e:
             switcher = {
                 1: InvalidAuthKey,
@@ -124,18 +124,18 @@ class SessionApi(Api):
                                       files={'img': img})
 
     async def auth(self) -> Dict[str, Any]:
-        r = await Api.call_action(self, 'auth', auth_key=self._auth_key)
-        self._session_key = r.get('session')
+        r = await Api.call_action(self, 'auth', auth_key=self.auth_key)
+        self.session_key = r.get('session')
         return r
 
     async def verify(self) -> Dict[str, Any]:
-        return await self.call_action('verify', qq=self._qq)
+        return await self.call_action('verify', qq=self.qq)
 
     async def release(self) -> Dict[str, Any]:
         try:
-            return await self.call_action('release', qq=self._qq)
+            return await self.call_action('release', qq=self.qq)
         finally:
-            self._session_key = None
+            self.session_key = None
 
     async def resp_new_friend(self,
                               *,
