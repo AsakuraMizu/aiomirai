@@ -43,12 +43,12 @@ class InvalidAuthKey(AuthenticateError):
     pass
 
 
-class InvaildBot(AuthenticateError):
+class InvalidBot(AuthenticateError):
     """指定的 Bot 不存在。"""
     pass
 
 
-class InvaildSession(AuthenticateError):
+class InvalidSession(AuthenticateError):
     """Session 失效或不存在。"""
     pass
 

@@ -108,8 +108,8 @@ class SessionApi(Api):
         except ActionFailed as _e:
             switcher = {
                 1: InvalidAuthKey,
-                2: InvaildBot,
-                3: InvaildSession,
+                2: InvalidBot,
+                3: InvalidSession,
                 4: Unverified
             }
             e = switcher.get(_e.code)
