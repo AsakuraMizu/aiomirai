@@ -4,6 +4,9 @@ sidebar: auto
 
 # 更新日志
 
+## v0.3.4
++ 修复了 `MessageChain` 中几处关于 `Plain` 的错误
+
 ## v0.3.2
 **此版本存在严重 BUG, 请使用 v0.3.3 代替**
 + 使用 `quit` 方法退出群聊

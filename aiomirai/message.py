@@ -180,7 +180,7 @@ class MessageChain(list):
             if isinstance(obj, MessageSegment):
                 if self and self[-1].type == 'Plain' and obj.type == 'Plain':
                     self[-1]['text'] += obj['text']
-                elif obj.type != 'text' or obj['text'] or not self:
+                elif obj.type != 'Plain' or obj['text'] or not self:
                     super().append(obj)
             else:
                 self.append(MessageSegment(obj))
@@ -205,7 +205,7 @@ class MessageChain(list):
         idx = 0
         while idx < len(self):
             if idx > 0 and self[idx -
-                                1].type == 'text' and self[idx].type == 'text':
+                                1].type == 'Plain' and self[idx].type == 'Plain':
                 self[idx - 1]['text'] += self[idx]['text']
                 del self[idx]
             else:
@@ -221,7 +221,7 @@ class MessageChain(list):
 
         result = ''
         for seg in self:
-            if seg.type == 'text':
+            if seg.type == 'Plain':
                 result += ' ' + seg['text']
         if result:
             result = result[1:]
