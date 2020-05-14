@@ -45,7 +45,7 @@ class Api:
             if isinstance(data, dict):
                 return {func(k): _parse(v, camelCase) for k, v in data.items()}
             elif isinstance(data, list):
-                return [func(x) for x in data]
+                return [_parse(x, func) for x in data]
             else:
                 return data
 

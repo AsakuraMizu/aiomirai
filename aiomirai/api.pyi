@@ -56,7 +56,7 @@ class SessionApi(Api):
     """
     auth_key: str
     qq: int
-    session: Optional[str]
+    session_key: Optional[str]
 
     def __init__(
             self,
