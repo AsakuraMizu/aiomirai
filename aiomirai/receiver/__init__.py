@@ -8,7 +8,7 @@ from ..bus import EventBus
 from ..event import from_payload
 from ..logger import Receiver as Logger
 
-__all__ = ['Receiver', 'ReportReceiver']
+__all__ = ['Receiver']
 
 
 class Receiver(EventBus):
@@ -28,5 +28,6 @@ class Receiver(EventBus):
 
 try:
     from .report import ReportReceiver
-except:
+    __all__ += 'ReportReceiver'
+except ImportError:
     pass
