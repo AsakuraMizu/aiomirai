@@ -6,6 +6,7 @@ app = Quart(__name__)
 rec = ReportReceiver(app)
 api = SessionApi('http://localhost:8080', 'authKey', 10000)
 
+
 @rec.on('FriendMessage')
 async def _(ev: Event):
     async with api:
