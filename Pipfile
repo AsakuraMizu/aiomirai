@@ -8,6 +8,7 @@ pylint = "*"
 yapf = "*"
 aiomirai = {editable = true,extras = ["all"],path = "."}
 quart = "*"
+websockets = "*"
 
 [packages]
 httpx = "*"

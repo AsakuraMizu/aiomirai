@@ -98,7 +98,7 @@ class SessionApi(Api):
                           method: Optional[str] = 'POST',
                           format: Optional[str] = 'json',
                           **params) -> Any:
-        if not self.session_key:
+        if self.session_key is None:
             raise Unauthenticated
         try:
             return await super().call_action(action,

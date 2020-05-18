@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional, Union
 from .message import MessageChain
 from .utils import snake_case
 
-__all__ = ['Event']
+__all__ = ['Event', 'from_payload']
 
 
 class Event(dict):

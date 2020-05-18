@@ -38,6 +38,7 @@ setuptools.setup(
     extras_require={
         'all': ['quart'],
         'report': ['quart'],
+        'ws': ['websockets'],
     },
     python_requires='>=3.7',
 )

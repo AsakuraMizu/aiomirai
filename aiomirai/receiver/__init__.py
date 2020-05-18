@@ -28,6 +28,12 @@ class Receiver(EventBus):
 
 try:
     from .report import ReportReceiver
-    __all__ += 'ReportReceiver'
+    __all__ += ['ReportReceiver']
+except ImportError:
+    pass
+
+try:
+    from .ws import WsReceiver
+    __all__ += ['WsReceiver']
 except ImportError:
     pass
