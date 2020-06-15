@@ -111,7 +111,12 @@ class SessionApi(Api):
                 1: InvalidAuthKey,
                 2: InvalidBot,
                 3: InvalidSession,
-                4: Unverified
+                4: Unverified,
+                5: UnknownTarget,
+                6: FileNotFound,
+                10: NoPermission,
+                20: BotMuted,
+                30: MessageTooLong
             }
             e = switcher.get(_e.code)
             if not e:

@@ -58,6 +58,31 @@ class Unverified(AuthenticateError):
     pass
 
 
+class UnknownTarget(ActionFailed):
+    """发送消息目标不存在(指定对象不存在)"""
+    pass
+
+
+class FileNotFound(ActionFailed):
+    """指定文件不存在，出现于发送本地图片"""
+    pass
+
+
+class NoPermission(ActionFailed):
+    """无操作权限，指Bot没有对应操作的限权"""
+    pass
+
+
+class BotMuted(ActionFailed):
+    """Bot被禁言，指Bot当前无法向指定群发送消息"""
+    pass
+
+
+class MessageTooLong(ActionFailed):
+    """消息过长"""
+    pass
+
+
 class HttpFailed(ApiError):
     """HTTP 请求响应码不是 2xx。"""
     def __init__(self, status_code: int):
