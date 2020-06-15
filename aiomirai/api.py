@@ -138,6 +138,8 @@ class SessionApi(Api):
         return await self.call_action('verify', qq=self.qq)
 
     async def release(self) -> Dict[str, Any]:
+        if self.session_key is None:
+            return {"code": 0, "msg": "success"}
         try:
             return await self.call_action('release', qq=self.qq)
         finally:
