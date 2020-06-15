@@ -1,5 +1,5 @@
 ---
-sider: auto
+sidebar: auto
 ---
 
 # API
