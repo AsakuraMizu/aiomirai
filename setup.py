@@ -33,12 +33,12 @@ setuptools.setup(
         'Programming Language :: Python :: 3 :: Only',
     ],
     install_requires=[
-        'httpx',
+        'httpx==0.13.*',
     ],
     extras_require={
-        'all': ['quart'],
-        'report': ['quart'],
-        'ws': ['websockets'],
+        'all': ['quart==0.12.*', 'websockets==8.*'],
+        'report': ['quart==0.12.*'],
+        'ws': ['websockets==8.*'],
     },
     python_requires='>=3.7',
 )

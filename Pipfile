@@ -7,11 +7,11 @@ verify_ssl = true
 pylint = "*"
 yapf = "*"
 aiomirai = {editable = true,extras = ["all"],path = "."}
-quart = "*"
-websockets = "*"
+quart = "==0.12.*"
+websockets = "==8.*"
 
 [packages]
-httpx = "*"
+httpx = "==0.13.*"
 
 [requires]
 python_version = "3.8"
