@@ -6,12 +6,12 @@ from . import Receiver
 class ReportReceiver(Receiver):
     def __init__(self, app: Quart, endpoint: str = '/mirai'):
         super().__init__()
-        app.add_url_rule(path=endpoint,
+        app.add_url_rule(rule=endpoint,
                          endpoint=endpoint,
-                         view_func=self._postreceive,
+                         view_func=self._post_receive,
                          methods=['POST'])
 
-    async def _postreceive(self) -> Response:
+    async def _post_receive(self) -> Response:
         payload = await request.json
         if not isinstance(payload, dict):
             abort(400)
