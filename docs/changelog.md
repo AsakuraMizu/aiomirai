@@ -5,6 +5,8 @@ sidebar: false
 # 更新日志
 
 ## v0.3.7 (WIP)
++ API 调用 和 事件接收 的日志改为默认隐藏，可以通过 `aiomirai.logger.Api/Receiver.setLevel(logging.DEBUG)` 的方法重新启用
++ 新功能：支持通过 Http Polling 接收事件
 + 支持处理 Bot 被邀请入群请求
 
 ## v0.3.6
