@@ -37,3 +37,9 @@ try:
     __all__ += ['WsReceiver']
 except ImportError:
     pass
+
+try:
+    from .polling import PollingReceiver
+    __all__ += ['PollingReceiver']
+except ImportError:
+    pass
