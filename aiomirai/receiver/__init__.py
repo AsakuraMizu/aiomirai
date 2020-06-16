@@ -13,7 +13,7 @@ __all__ = ['Receiver']
 
 class Receiver(EventBus):
     async def _handle_event(self, payload: Dict[str, Any]) -> Any:
-        Logger.info('Received: %s', str(payload))
+        Logger.debug('Received: %s', str(payload))
         ev = from_payload(payload)
         if not ev:
             return

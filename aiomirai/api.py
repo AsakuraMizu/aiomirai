@@ -37,7 +37,7 @@ class Api:
         del args['self']
         del args['action']
         args = {k: v for k, v in args.items() if v}
-        Logger.info('Calling %s with params: %s', action, repr(args))
+        Logger.debug('Calling %s with params: %s', action, repr(args))
 
         mix = {'data': data, 'files': files, 'json': json, 'params': params}
 
