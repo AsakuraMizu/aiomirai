@@ -477,8 +477,29 @@ class SessionApi(Api):
 
         Args:
             event_id: 响应申请事件的标识
-            from_id: 事件对应申请人QQ号
-            group_id: 事件对应申请人的群号，可能为0
+            from_id: 申请人QQ号
+            group_id: 申请人申请入群的群号
+            operate: 响应的操作类型，0表示同意入群，1表示拒绝入群，2表示忽略请求，3表示拒绝入群并添加黑名单，
+                     不再接收该用户的入群申请，4表示忽略入群并添加黑名单，不再接收该用户的入群申请
+            message: 回复的信息
+        """
+        ...
+
+    async def resp_bot_invited_join_group(
+            self, *,
+            event_id: int,
+            from_id: int,
+            group_id: int,
+            operate: Optional[int] = 0,
+            message: Optional[str] = ""
+        ) -> Dict[str, Any]:
+        """
+        相应Bot被邀请入群申请
+
+        Args:
+            event_id: 响应申请事件的标识
+            from_id: 邀请人（好友）的QQ号
+            group_id: 被邀请进入群的群号
             operate: 响应的操作类型，0表示同意入群，1表示拒绝入群，2表示忽略请求，3表示拒绝入群并添加黑名单，
                      不再接收该用户的入群申请，4表示忽略入群并添加黑名单，不再接收该用户的入群申请
             message: 回复的信息

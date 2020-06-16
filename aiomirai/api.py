@@ -173,6 +173,20 @@ class SessionApi(Api):
                                       operate=operate,
                                       message=message)
 
+    async def resp_bot_invited_join_group(self,
+                                          *,
+                                          event_id: int,
+                                          from_id: int,
+                                          group_id: int,
+                                          operate: Optional[int] = 0,
+                                          message: Optional[str] = "") -> Dict[str, Any]:
+        return await self.call_action('resp/bot_invited_join_group_request_event',
+                                      event_id=event_id,
+                                      from_id=from_id,
+                                      group_id=group_id,
+                                      operate=operate,
+                                      message=message)
+
     async def __aenter__(self) -> 'SessionApi':
         await self.auth()
         await self.verify()

@@ -1,8 +1,11 @@
 ---
-sidebar: auto
+sidebar: false
 ---
 
 # 更新日志
+
+## v0.3.7 (WIP)
++ 支持处理 Bot 被邀请入群请求
 
 ## v0.3.6
 + 如果未认证时（包括认证失败）调用 `release` 会伪造成功结果而不是抛出异常
@@ -16,14 +19,14 @@ sidebar: auto
 ## v0.3.4
 + 修复了 `MessageChain` 中几处关于 `Plain` 的错误
 
-## v0.3.2
-**此版本存在严重 BUG, 请使用 v0.3.3 代替**
+## v0.3.3 (bug fix)
+## ~~v0.3.2~~
 + 使用 `quit` 方法退出群聊
 + `api_root`, `auth_key`, `qq`, `session_key` 修改为公共属性, 并添加至 `api.pyi`
 + **BREAKING CHANGE:** 调用 API 的返回值也应 `snake_case` 化
 
-## v0.3.0
-**此版本存在严重 BUG, 请使用 v0.3.1 代替**
+## v0.3.1 (bug fix)
+## ~~v0.3.0~~
 + 重写了 `call_action` 方法, 目前理论上可以支持任意 API 调用
 + `Plain` 类型的消息段在转化为字符串时会返回 `text` 字段的内容而不是 `[Plain::text=context]`
 + 调用 `release` 方法后将自动重置 `_session_key`
