@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords='qq mirai qqbot',
-    url='https://github.com/water-lift/aiomirai',
+    url='https://github.com/AsakuraMizu/aiomirai',
     packages=setuptools.find_packages(include=('aiomirai', 'aiomirai.*')),
     package_data={
         '': ['*.pyi'],
@@ -22,7 +22,7 @@ setuptools.setup(
         'License :: OSI Approved :: GNU Affero General Public License v3',
         'Operating System :: OS Independent',
         'Intended Audience :: Developers',
-        "Framework :: AsyncIO",
+        'Framework :: AsyncIO',
         'Framework :: Robot Framework',
         'Framework :: Robot Framework :: Library',
         'Topic :: Communications :: Chat',
