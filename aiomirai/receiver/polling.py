@@ -6,7 +6,7 @@ import httpx
 from . import Receiver
 from ..api import SessionApi
 from ..exception import ApiError
-from ..logger import Receiver as Logger
+from ..logger import logger
 
 
 class PollingReceiver(Receiver):
@@ -25,8 +25,8 @@ class PollingReceiver(Receiver):
                 for ev in res['data']:
                     await self._handle_event(ev)
             except ApiError:
-                Logger.exception('Failed to fetch message.')
-                Logger.error('Retrying in {} sec(s)', self.delay_time)
+                logger.exception('Failed to fetch message.')
+                logger.error('Retrying in {} sec(s)', self.delay_time)
                 await asyncio.sleep(self.delay_time)
             else:
                 await asyncio.sleep(self.sleep_time)

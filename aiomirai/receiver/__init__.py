@@ -6,14 +6,14 @@ from typing import Any, Dict
 
 from ..bus import EventBus
 from ..event import from_payload
-from ..logger import Receiver as Logger
+from ..logger import logger
 
 __all__ = ['Receiver']
 
 
 class Receiver(EventBus):
     async def _handle_event(self, payload: Dict[str, Any]) -> Any:
-        Logger.debug('Received: %s', str(payload))
+        logger.debug('Received: %s', str(payload))
         ev = from_payload(payload)
         if not ev:
             return

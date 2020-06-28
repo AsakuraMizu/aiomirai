@@ -9,7 +9,7 @@ import websockets
 from . import Receiver
 from ..api import SessionApi
 from ..exception import Unauthenticated
-from ..logger import Receiver as Logger
+from ..logger import logger
 
 
 class WsReceiver(Receiver):
@@ -34,24 +34,24 @@ class WsReceiver(Receiver):
                             try:
                                 pong = await ws.ping()
                                 await asyncio.wait_for(pong, timeout=self.ping_timeout)
-                                Logger.debug('Ping OK, keeping connection alive...')
+                                logger.debug('Ping OK, keeping connection alive...')
                                 continue
                             except:
-                                Logger.warning('Ping error - retrying connection in {} sec(s)'.format(self.sleep_time))
+                                logger.warning('Ping error - retrying connection in {} sec(s)'.format(self.sleep_time))
                                 await asyncio.sleep(self.sleep_time)
                                 break
                         if res.get('code') == 10:
-                            Logger.error('Websocket is not enabled!')
-                            Logger.error('Retrying connection in {} sec(s)'.format(self.sleep_time))
+                            logger.error('Websocket is not enabled!')
+                            logger.error('Retrying connection in {} sec(s)'.format(self.sleep_time))
                             await asyncio.sleep(self.sleep_time)
                             break
                         await self._handle_event(res)
             except socket.gaierror:
-                Logger.error('Socket error - retrying connection in {} sec(s)'.format(self.sleep_time))
+                logger.error('Socket error - retrying connection in {} sec(s)'.format(self.sleep_time))
                 await asyncio.sleep(self.sleep_time)
                 break
             except ConnectionRefusedError:
-                Logger.error('Can NOT connect to Mirai API HTTP. Check if Mirai API HTTP is running.')
-                Logger.error('Retrying connection in {} sec(s)'.format(self.sleep_time))
+                logger.error('Can NOT connect to Mirai API HTTP. Check if Mirai API HTTP is running.')
+                logger.error('Retrying connection in {} sec(s)'.format(self.sleep_time))
                 await asyncio.sleep(self.sleep_time)
                 break

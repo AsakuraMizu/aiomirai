@@ -9,7 +9,7 @@ import httpx
 from httpx._models import RequestData, RequestFiles, QueryParamTypes
 
 from .exception import *
-from .logger import Api as Logger
+from .logger import logger
 from .utils import camelCase, snake_case
 
 __all__ = ['Api', 'SessionApi']
@@ -37,7 +37,7 @@ class Api:
         del args['self']
         del args['action']
         args = {k: v for k, v in args.items() if v}
-        Logger.debug('Calling %s with params: %s', action, repr(args))
+        logger.debug('Calling %s with params: %s', action, repr(args))
 
         mix = {'data': data, 'files': files, 'json': json, 'params': params}
 
