@@ -4,8 +4,7 @@
 
 from typing import Any, Dict
 
-from ..bus import EventBus
-from ..event import from_payload
+from ..event import EventBus, from_payload
 from ..logger import logger
 
 __all__ = ['Receiver']
