@@ -4,6 +4,10 @@ sidebar: false
 
 # 更新日志
 
+## v0.3.8 (WIP)
++ **BREAKING CHANGE:** 不再使用自行封装的 `Api` 和 `Receiver`，改为 `aiomirai.logger.logger`
++ `EventBus` 合并到了 `event.py`
+
 ## v0.3.7
 + 更多的 API 文档
 + API 调用 和 事件接收 的日志改为默认隐藏，可以通过 `aiomirai.logger.Api/Receiver.setLevel(logging.DEBUG)` 的方法重新启用
